@@ -25,3 +25,12 @@ spring:
         max-size: 25
         queue-capacity: 500
       thread-name-prefix: notif-worker-
+
+notification:
+  dispatch:
+    core-pool-size: 10
+    max-pool-size: 20
+    queue-capacity: 500
+  retry:
+    max-attempts: 5
+    delay-ms: 5000 # 5 seconds
