@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: multi-tenant-notifcation-ankit-kathait
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=tenant_notification
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: tenant_notification
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 25
+        queue-capacity: 500
+      thread-name-prefix: notif-worker-
