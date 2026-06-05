@@ -31,4 +31,11 @@ public class NotificationResource {
         );
         return ResponseEntity.accepted().build();
     }
+
+    @GetMapping("/{notificationId}/status")
+    public ResponseEntity<String> getNotificationStatus(@RequestHeader("X-Tenant-ID") UUID tenantId,
+                                                        @PathVariable UUID notificationId) {
+        String status = notificationService.getNotificationStatus(tenantId, notificationId);
+        return ResponseEntity.ok(status);
+    }
 }

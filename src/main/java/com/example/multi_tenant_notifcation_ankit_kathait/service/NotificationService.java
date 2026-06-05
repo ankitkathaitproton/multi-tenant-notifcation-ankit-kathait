@@ -68,4 +68,11 @@ public class NotificationService {
         }
         return content;
     }
+
+    public String getNotificationStatus(UUID tenantId, UUID notificationId) {
+        return deliveryRepository.findById(notificationId)
+                .filter(delivery -> delivery.getTenantId().equals(tenantId))
+                .map(delivery -> delivery.getCurrentStatus().toString())
+                .orElseThrow(() -> new IllegalArgumentException("Notification not found or does not belong to tenant"));
+    }
 }
