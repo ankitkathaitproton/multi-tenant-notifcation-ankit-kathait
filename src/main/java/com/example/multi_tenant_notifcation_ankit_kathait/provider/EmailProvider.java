@@ -1,0 +1,26 @@
+package com.example.multi_tenant_notifcation_ankit_kathait.provider;
+
+import com.example.multi_tenant_notifcation_ankit_kathait.enums.ChannelType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EmailProvider implements NotificationProvider {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailProvider.class);
+
+    @Override
+    public void send(String recipient, String content) {
+        logger.info("Sending EMAIL to {}: {}", recipient, content);
+        // Simulate a failure for retry demonstration
+        if (Math.random() > 0.5) {
+            throw new RuntimeException("Failed to send email");
+        }
+    }
+
+    @Override
+    public ChannelType getChannelType() {
+        return ChannelType.EMAIL;
+    }
+}
