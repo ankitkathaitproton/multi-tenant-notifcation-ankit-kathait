@@ -1,12 +1,15 @@
 package com.example.multi_tenant_notifcation_ankit_kathait.service;
 
+import com.example.multi_tenant_notifcation_ankit_kathait.dto.DeliveryReportDTO;
 import com.example.multi_tenant_notifcation_ankit_kathait.entity.NotificationDelivery;
 import com.example.multi_tenant_notifcation_ankit_kathait.entity.NotificationTemplate;
 import com.example.multi_tenant_notifcation_ankit_kathait.enums.DeliveryStatus;
 import com.example.multi_tenant_notifcation_ankit_kathait.repository.NotificationDeliveryRepository;
 import com.example.multi_tenant_notifcation_ankit_kathait.repository.NotificationTemplateRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.multi_tenant_notifcation_ankit_kathait.service.DispatchService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +60,24 @@ public class NotificationService {
 
         // 5. Dispatch for Sending
         dispatchService.dispatch(delivery.getId(), template.getChannelType(), recipient, content);
+    }
+
+    public Page<DeliveryReportDTO> getDeliveryReports(UUID tenantId, Optional<DeliveryStatus> status, Pageable pageable) {
+        Page<NotificationDelivery> deliveries;
+        if (status.isPresent()) {
+            deliveries = deliveryRepository.findByTenantIdAndCurrentStatus(tenantId, status.get(), pageable);
+        } else {
+            deliveries = deliveryRepository.findByTenantId(tenantId, pageable);
+        }
+
+        return deliveries.map(delivery -> new DeliveryReportDTO(
+                delivery.getId(),
+                delivery.getChannelType(),
+                delivery.getRecipient(),
+                delivery.getCurrentStatus(),
+                delivery.getCreatedAt(),
+                delivery.getUpdatedAt()
+        ));
     }
 
     private String renderTemplate(String content, Map<String, String> variables) {
