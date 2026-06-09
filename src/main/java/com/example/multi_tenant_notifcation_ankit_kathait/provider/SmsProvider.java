@@ -13,10 +13,6 @@ public class SmsProvider implements NotificationProvider {
     @Override
     public void send(String recipient, String content) {
         logger.info("Sending SMS to {}: {}", recipient, content);
-        // Simulate a failure for retry demonstration
-        if (Math.random() > 0.5) {
-            throw new RuntimeException("Failed to send SMS");
-        }
     }
 
     @Override
